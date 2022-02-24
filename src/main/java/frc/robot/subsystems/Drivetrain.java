@@ -4,16 +4,17 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
-  private final TalonSRX rightMotor1 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1);
-  private final TalonSRX rightMotor2 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT2);
-  private final TalonSRX leftMotor1 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.LEFT1);
-  private final TalonSRX leftMotor2 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.LEFT2);
+  
+  private final CANSparkMax rightMotor1 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
+  private final CANSparkMax rightMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
+  private final CANSparkMax leftMotor1 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
+  private final CANSparkMax leftMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
 
   /**
    * Sets the power of the drivetrain's motors. Max values are 1, min values are -1.
@@ -22,10 +23,10 @@ public class Drivetrain extends SubsystemBase {
    * @author Lucas Brunner
    */
   public void setMotorPowers(double right, double left) {
-    rightMotor1.set(TalonSRXControlMode.PercentOutput, right);
-    rightMotor2.set(TalonSRXControlMode.PercentOutput, right);
-    leftMotor1.set(TalonSRXControlMode.PercentOutput, -left);
-    leftMotor2.set(TalonSRXControlMode.PercentOutput, -left);
+    rightMotor1.set(right);
+    rightMotor2.set(right);
+    leftMotor1.set(-left);
+    leftMotor2.set(-left);
   }
 
   /**
