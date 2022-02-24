@@ -1,4 +1,4 @@
-package frc.robot.constant.robotmap.motor;
+package frc.robot.constants.robotmap.motor;
 
 public class Climber {
   public static final int WINCH = 9;

@@ -1,4 +1,4 @@
-package frc.robot.constant.robotmap;
+package frc.robot.constants.robotmap;
 
 public class Sensors {
   public enum SingleWire {

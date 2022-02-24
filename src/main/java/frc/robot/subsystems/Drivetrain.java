@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystem;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -10,10 +10,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
-  private final TalonSRX rightMotor1 = new TalonSRX(frc.robot.constant.robotmap.motor.Drivetrain.RIGHT1);
-  private final TalonSRX rightMotor2 = new TalonSRX(frc.robot.constant.robotmap.motor.Drivetrain.RIGHT2);
-  private final TalonSRX leftMotor1 = new TalonSRX(frc.robot.constant.robotmap.motor.Drivetrain.LEFT1);
-  private final TalonSRX leftMotor2 = new TalonSRX(frc.robot.constant.robotmap.motor.Drivetrain.LEFT2);
+  private final TalonSRX rightMotor1 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1);
+  private final TalonSRX rightMotor2 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT2);
+  private final TalonSRX leftMotor1 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.LEFT1);
+  private final TalonSRX leftMotor2 = new TalonSRX(frc.robot.constants.robotmap.motor.Drivetrain.LEFT2);
 
   /**
    * Sets the power of the drivetrain's motors. Max values are 1, min values are -1.

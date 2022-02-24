@@ -1,4 +1,4 @@
-package frc.robot.constant.controllermap.axis;
+package frc.robot.constants.controllermap.axis;
 
 public class Drivetrain {
   public static final int Z_AXIS = 4;

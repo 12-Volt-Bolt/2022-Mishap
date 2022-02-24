@@ -1,4 +1,4 @@
-package frc.robot.constant.controllermap.axis;
+package frc.robot.constants.controllermap.axis;
 
 public class Intake {
   public static final int CONVEYOR_IN = 2;

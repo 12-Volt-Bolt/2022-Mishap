@@ -1,4 +1,4 @@
-package frc.robot.constant.robotmap.sensor;
+package frc.robot.constants.robotmap.sensor;
 
 public class Storage {
     public static final int STORAGE_RESET = 1;

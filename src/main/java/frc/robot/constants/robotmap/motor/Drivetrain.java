@@ -1,4 +1,4 @@
-package frc.robot.constant.robotmap.motor;
+package frc.robot.constants.robotmap.motor;
 
 public class Drivetrain {
   public static final int RIGHT1 = 12;

@@ -1,4 +1,4 @@
-package frc.robot.constant.values;
+package frc.robot.constants.values;
 
 public class Intake {
     // The up and down values are 5450 apart

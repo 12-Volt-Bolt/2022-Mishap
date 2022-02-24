@@ -1,4 +1,4 @@
-package frc.robot.constant.robotmap.motor;
+package frc.robot.constants.robotmap.motor;
 
 public class Storage {
   public static final int WHEEL = 8;

@@ -1,4 +1,4 @@
-package frc.robot.constant.controllermap.button;
+package frc.robot.constants.controllermap.button;
 
 public class Climber {
   public static final int DEPLOY = 8;

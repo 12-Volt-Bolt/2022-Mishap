@@ -1,4 +1,4 @@
-package frc.robot.subsystem;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.classes.Equations;
+import frc.robot.tools.Equations;
 
 public class Intake extends SubsystemBase {
   public enum IntakePosition {
@@ -26,8 +26,8 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  private final VictorSPX conveyorMotor = new VictorSPX(frc.robot.constant.robotmap.motor.Intake.CONVEYOR);
-  private final TalonSRX armMotor = new TalonSRX(frc.robot.constant.robotmap.motor.Intake.ARTICULATION);
+  private final VictorSPX conveyorMotor = new VictorSPX(frc.robot.constants.robotmap.motor.Intake.CONVEYOR);
+  private final TalonSRX armMotor = new TalonSRX(frc.robot.constants.robotmap.motor.Intake.ARTICULATION);
 
   private PIDController PID = new PIDController(.075, 0, 0);
   private IntakePosition currentPosition = IntakePosition.Up;
