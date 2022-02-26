@@ -4,7 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -13,12 +18,18 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * project.
  */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+  
+  public static Drivetrain drivetrain = new Drivetrain();
+  public static Limelight limelight = new Limelight();
+  public static Intake intake = new Intake();
+  public static Shooter shooter = new Shooter();
+
+  public static Joystick joy_1 = new Joystick(0);
+
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    drivetrain.register(this, 0);
+  }
 
   @Override
   public void robotPeriodic() {}
@@ -33,7 +44,13 @@ public class Robot extends TimedRobot {
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    drivetrain.arcadeDriveTurnThrottle(
+        joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Z_AXIS)
+      , joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Y_AXIS)
+      , this
+      );
+  }
 
   @Override
   public void disabledInit() {}
