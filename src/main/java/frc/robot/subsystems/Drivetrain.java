@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.tools.PriorityHandler;
 
 public class Drivetrain extends SubsystemBase {
   
@@ -15,6 +16,23 @@ public class Drivetrain extends SubsystemBase {
   private final CANSparkMax rightMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
   private final CANSparkMax leftMotor1 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
   private final CANSparkMax leftMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
+
+  private final PriorityHandler<DrivePower> priorityHandler = new PriorityHandler<DrivePower>();
+
+  @Override
+  public void periodic() {
+    DrivePower request = priorityHandler.getHighestPriorityRequest();
+
+    if (request == null) {
+      request = new DrivePower(0, 0);
+    }
+
+    setMotorPowers(request.right, request.left);
+  }
+
+  public void register(Object requester, int priority) {
+    priorityHandler.register(requester, priority);
+  }
 
   /**
    * Sets the power of the drivetrain's motors. Max values are 1, min values are -1.
@@ -28,14 +46,6 @@ public class Drivetrain extends SubsystemBase {
     leftMotor1.set(-left);
     leftMotor2.set(-left);
   }
-
-  /**
-   * Sets the power of the drivetrain's motors to 0.
-   * @author Lucas Brunner
-   */
-  public void stop() {
-    setMotorPowers(0, 0);
-  }
   
   /**
    * Arcade-style drivetrain input. Max values are 1, min values are -1.
@@ -43,14 +53,14 @@ public class Drivetrain extends SubsystemBase {
    * @param powerY The robot's rotation around the vertical axis. Positive is clockwise.
    * @author Lucas Brunner
    */
-  public void arcadeDrive(double powerZ, double powerY) {
+  public void arcadeDrive(double powerZ, double powerY, Object requester) {
     double rightOutput = -powerZ;
     double leftOutput = -powerZ;
 
     rightOutput += powerY;
     leftOutput -= powerY;
     
-    setMotorPowers(leftOutput, rightOutput);
+    priorityHandler.setRequest(requester, new DrivePower(rightOutput, leftOutput));
   }
 
   /**
@@ -60,7 +70,7 @@ public class Drivetrain extends SubsystemBase {
    * @param powerY The robot's rotation around the vertical axis. Positive is clockwise.
    * @author Lucas Brunner
    */
-  public void arcadeDriveTurnThrottle(double powerZ, double powerY) {
+  public void arcadeDriveTurnThrottle(double powerZ, double powerY, Object requester) {
     double rightOutput = 0;
     double leftOutput = 0;
     
@@ -86,7 +96,7 @@ public class Drivetrain extends SubsystemBase {
       }
     }
     
-    setMotorPowers(leftOutput, rightOutput);
+    priorityHandler.setRequest(requester, new DrivePower(rightOutput, leftOutput));
   }
 
   /**
@@ -95,7 +105,17 @@ public class Drivetrain extends SubsystemBase {
    * @param right power of the right wheels.
    * @author Lucas Brunner
    */
-  public void tankDrive(double left, double right) {
-    setMotorPowers(left, right);
+  public void tankDrive(double right, double left, Object requester) {
+    priorityHandler.setRequest(requester, new DrivePower(right, left));
+  }
+}
+
+class DrivePower {
+  public double right;
+  public double left;
+
+  public DrivePower(double rightPower, double leftPower) {
+    right = rightPower;
+    left = leftPower;
   }
 }
