@@ -28,6 +28,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     setMotorPowers(request.right, request.left);
+
+    priorityHandler.clearRequests();
   }
 
   public void register(Object requester, int priority) {
