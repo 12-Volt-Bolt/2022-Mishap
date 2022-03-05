@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   public static Limelight limelight = new Limelight();
   public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
+  public static Climber climber = new Climber();
 
   public static Joystick joy_1 = new Joystick(0);
 
@@ -49,6 +51,11 @@ public class Robot extends TimedRobot {
         joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Z_AXIS)
       , joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Y_AXIS)
       , this
+      );
+
+    climber.setClimberPowers(
+        joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Climber.FRONT_CLIMBER)
+      , joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Climber.REAR_CLIMBER)
       );
   }
 
