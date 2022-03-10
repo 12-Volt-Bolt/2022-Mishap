@@ -21,6 +21,8 @@ public class Drivetrain extends SubsystemBase {
   private final PriorityHandler<DrivePower> priorityHandler = new PriorityHandler<DrivePower>();
   private final RollingAverage rightRollingAverage = new RollingAverage(50);
   private final RollingAverage leftRollingAverage = new RollingAverage(50);
+  private final RollingAverage yRollingAverage = new RollingAverage(50);
+  private final RollingAverage zRollingAverage = new RollingAverage(50);
 
   public Drivetrain() {
     rightRollingAverage.resetWhenApproachingZero = true;
@@ -28,6 +30,12 @@ public class Drivetrain extends SubsystemBase {
 
     rightRollingAverage.speedReductionAmount = 10;
     leftRollingAverage.speedReductionAmount = 10;
+    
+    yRollingAverage.resetWhenApproachingZero = true;
+    zRollingAverage.resetWhenApproachingZero = true;
+
+    yRollingAverage.speedReductionAmount = 10;
+    zRollingAverage.speedReductionAmount = 10;
   }
 
   @Override
@@ -41,7 +49,8 @@ public class Drivetrain extends SubsystemBase {
     rightRollingAverage.addSample(request.right);
     leftRollingAverage.addSample(request.left);
 
-    setMotorPowers(rightRollingAverage.getAverage(), leftRollingAverage.getAverage());
+    //setMotorPowers(rightRollingAverage.getAverage(), leftRollingAverage.getAverage());
+    setMotorPowers(request.right, request.left);
 
     priorityHandler.clearRequests();
   }
@@ -83,6 +92,12 @@ public class Drivetrain extends SubsystemBase {
    * @author Lucas Brunner
    */
   public void arcadeDriveTurnThrottle(double powerY, double powerZ, double priority) {
+    yRollingAverage.addSample(powerY);
+    zRollingAverage.addSample(powerZ);
+
+    powerY = yRollingAverage.getAverage();
+    powerZ = zRollingAverage.getAverage();
+
     double rightOutput = 0;
     double leftOutput = 0;
 

@@ -11,15 +11,23 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoLockClimber;
 import frc.robot.commands.ClimberControl;
 import frc.robot.commands.LockServoRelease;
-import frc.robot.commands.ShootDistance;
+import frc.robot.commands.ShootHighGoal;
+import frc.robot.commands.ShootLowGoal;
 import frc.robot.commands.UnlockServoRelease;
+import frc.robot.commands.autocommands.DoShootLowDrive;
+import frc.robot.commands.autocommands.DoShootHighDrive;
+import frc.robot.commands.autocommands.DoLowShootAuto;
+import frc.robot.commands.autocommands.DriveForwardsAuto;
+import frc.robot.commands.autocommands.ShootHighDrive;
+import frc.robot.commands.autocommands.ShootLowDrive;
 import frc.robot.commands.climbsequence.InitializeClimbSequence;
 import frc.robot.commands.climbsequence.MainClimbSequence;
+import frc.robot.commands.climbsequence.Step2Climp;
 import frc.robot.constants.SpinShooterFromSmartdashboard;
+import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake.IntakePosition;
 import frc.robot.tools.EasyPov;
@@ -34,10 +42,10 @@ import frc.robot.tools.Equations;
 public class Robot extends TimedRobot {
   
   public static Drivetrain drivetrain = new Drivetrain();
-  //public static Limelight limelight = new Limelight();
   public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
   public static Climber climber = new Climber();
+  public static Auto auto = new Auto();
 
   public static Joystick joy_1 = new Joystick(0);
 
@@ -48,33 +56,52 @@ public class Robot extends TimedRobot {
   public static UnlockServoRelease unlockServoRelease = new UnlockServoRelease();
   public static LockServoRelease lockServoRelease = new LockServoRelease();
 
-  public static ClimberControl manualClimberControl = new ClimberControl();
+  // public static ClimberControl manualClimberControl = new ClimberControl();
   public static AutoLockClimber autoLockClimber = new AutoLockClimber();
   public static InitializeClimbSequence climbSequence = new InitializeClimbSequence();
   public static MainClimbSequence mainClimbSequence = new MainClimbSequence();
-  public static ShootDistance shootDistance = new ShootDistance();
+  
+  public static ShootHighGoal shootHighGoal = new ShootHighGoal();
+  public static ShootLowGoal shootLowGoal = new ShootLowGoal();
+
+  // Auto Commands
+  public static DoShootLowDrive doShootLowDrive = new DoShootLowDrive();
+  public static DoShootHighDrive doShootHighDrive = new DoShootHighDrive();
+
+  public static ShootLowDrive shootLowDrive = new ShootLowDrive();
+  public static ShootHighDrive shootHighDrive = new ShootHighDrive();
 
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    SmartDashboard.putData(doShootLowDrive);
+    SmartDashboard.putData(doShootHighDrive);
+  }
 
   @Override
   public void robotPeriodic() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    if (doShootLowDrive.isScheduled()) {
+      shootLowDrive.schedule();
+    } else if (doShootHighDrive.isScheduled()) {
+      shootHighDrive.schedule();
+    }
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   @Override
   public void teleopInit() {
-    SmartDashboard.putData(manualClimberControl);
     SmartDashboard.putData(autoLockClimber);
     SmartDashboard.putData(climbSequence);
-    //SmartDashboard.putData(unlockServoRelease);
-    //SmartDashboard.putData(lockServoRelease);
     SmartDashboard.putData(mainClimbSequence);
-    SmartDashboard.putData(shootDistance);
+    
+    SmartDashboard.putData(shootLowGoal);
+    SmartDashboard.putData(shootHighGoal);
   }
 
   @Override

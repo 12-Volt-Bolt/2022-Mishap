@@ -51,7 +51,7 @@ public class HomeClimbArms extends CommandBase {
     }
 
     if (rearHomeReleased && rearReleaseTimer.isFinished()) {
-      rearPower = -0.1;
+      rearPower = -0.2;
     }
 
     if (rearHomeReleased && Robot.climber.getRearStop() && rearHomeDone == false && rearReleaseTimer.isFinished()) {
@@ -71,7 +71,7 @@ public class HomeClimbArms extends CommandBase {
     }
 
     if (frontHomeReleased && frontReleaseTimer.isFinished()) {
-      frontPower = -0.1;
+      frontPower = -0.2;
     }
 
     if (frontHomeReleased && Robot.climber.getFrontStop() && frontReleaseTimer.isFinished()) {

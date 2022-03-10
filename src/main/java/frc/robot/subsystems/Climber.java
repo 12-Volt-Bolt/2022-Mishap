@@ -46,20 +46,21 @@ public class Climber extends SubsystemBase {
     } else {
       frontWinch.set(frontPowerSet);
     }
-    if (rearStop.get() == false && rearPowerSet > 0) {
-      rearWinch.set(0);
+    */
+
+    if (rearStop.get() == false && rearPowerSet < 0) {
+      rearWinch.set(-0.05);
     } else {
       rearWinch.set(rearPowerSet);
     }
-    */
+
     frontWinch.set(-frontPowerSet);
-    rearWinch.set(rearPowerSet);
 
     frontPowerSet = 0;
     rearPowerSet = 0;
 
-    SmartDashboard.putNumber("Front position", getFrontPosition());
-    SmartDashboard.putNumber("Rear position", getRearPosition());
+    // SmartDashboard.putNumber("Front position", getFrontPosition());
+    // SmartDashboard.putNumber("Rear position", getRearPosition());
   }
 
   public void setFrontIdle(IdleMode idleMode) {

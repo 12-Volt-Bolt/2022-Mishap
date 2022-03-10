@@ -11,7 +11,7 @@ import frc.robot.Robot;
 import frc.robot.tools.Equations;
 import frc.robot.tools.Timer;
 
-public class ShootDistance extends CommandBase {
+public class ShootHighGoal extends CommandBase {
 
   public double distanceInFeet = 4;
 
@@ -22,7 +22,7 @@ public class ShootDistance extends CommandBase {
   private Timer feederTimer = new Timer(5000);
 
   /** Creates a new ShootDistance. */
-  public ShootDistance() {
+  public ShootHighGoal() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -41,12 +41,12 @@ public class ShootDistance extends CommandBase {
   @Override
   public void execute() {
 
-    double goalRPM = 0;
-    double feedForward = 0;
+    double goalRPM = 2215;
+    double feedForward = 0.4;
     
-    if (distanceInFeet <= 05) { goalRPM = 2320; feedForward = 0.5; }
-    if (distanceInFeet <= 04) { goalRPM = 2215; feedForward = 0.4; }
-    if (distanceInFeet <= 03) { goalRPM = 2175; feedForward = 0.387; }
+    //if (distanceInFeet <= 05) { goalRPM = 2320; feedForward = 0.5; }
+    //if (distanceInFeet <= 04) { goalRPM = 2215; feedForward = 0.4; }
+    //if (distanceInFeet <= 03) { goalRPM = 2175; feedForward = 0.387; }
     // if (distanceInFeet <= 03) { goalRPM = 2120; feedForward = 0.375; }
 
     goalRPM += 0;

@@ -6,7 +6,8 @@ package frc.robot.commands.climbsequence;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.constants.values.ClimberPointsSmallHex;
+import frc.robot.constants.values.ClimberPointsBareHex;
+import frc.robot.tools.Timer;
 
 public class PullUp extends CommandBase {
 
@@ -14,9 +15,11 @@ public class PullUp extends CommandBase {
   private boolean rearPulledUp = false;
   private boolean end = false;
 
+  private Timer swingWait;
+
   /** Creates a new PullUp. */
-  public PullUp() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public PullUp(double swingWaitTimeSeconds) {
+    swingWait = new Timer(((long) swingWaitTimeSeconds * 1000) + 1);
   }
   
   // Called when the command is initially scheduled.
@@ -25,6 +28,8 @@ public class PullUp extends CommandBase {
     frontPulledUp = false;
     rearPulledUp = false;
     end = false;
+    
+    System.out.println("Pull Up");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,31 +39,35 @@ public class PullUp extends CommandBase {
     double rearPower = 0;
 
     if (frontPulledUp == false) {
-      frontPower = -0.3;
+      frontPower = -0.4;
     }
 
-    if (Robot.climber.getFrontPosition() >= ClimberPointsSmallHex.FRONT_PULL_UP) {
+    if (Robot.climber.getFrontPosition() >= ClimberPointsBareHex.FRONT_PULL_UP_SLOW_DOWN) {
+      frontPower = -0.2;
+    }
+
+    if (Robot.climber.getFrontPosition() >= ClimberPointsBareHex.FRONT_PULL_UP) {
       frontPulledUp = true;
     }
 
     if (frontPulledUp == true) {
-      frontPower = 0.1;
+      frontPower = -0.05;
     }
 
-    if (frontPulledUp == true && rearPulledUp == false) {
+    if (frontPulledUp == true) {
       rearPower = -0.3;
     }
 
-    if (Robot.climber.getRearPosition() <= ClimberPointsSmallHex.REAR_PULL_UP) {
+    if (Robot.climber.getRearPosition() <= ClimberPointsBareHex.REAR_PULL_UP && rearPulledUp == false) {
       rearPulledUp = true;
+      swingWait.reset();
     }
 
-    if (frontPulledUp == true && rearPulledUp == true) {
-      rearPower = -0.05;
-      frontPower = 0.1;
+    if (frontPulledUp == true && rearPulledUp == true && swingWait.isFinished()) {
+      frontPower = 0.2;
     }
 
-    if (frontPulledUp == true && rearPulledUp == true && Robot.climber.getFrontPosition() < ClimberPointsSmallHex.FRONT_SAFE_EXTEND) {
+    if (frontPulledUp == true && rearPulledUp == true && Robot.climber.getFrontPosition() < ClimberPointsBareHex.FRONT_SAFE_EXTEND) {
       end = true;
     }
     

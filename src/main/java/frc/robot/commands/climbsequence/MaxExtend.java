@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.constants.values.ClimberPointsSmallHex;
+import frc.robot.constants.values.ClimberPointsBareHex;
 
 public class MaxExtend extends CommandBase {
 
@@ -25,29 +25,31 @@ public class MaxExtend extends CommandBase {
     Robot.climber.setFrontIdle(IdleMode.kBrake);
 
     frontInPosition = false;
+
+    System.out.println("Max Extend");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double frontPower = 0;
-    double rearPower = -0.2;
+    double rearPower = -0.3;
     
-    if (Robot.climber.getFrontPosition() > ClimberPointsSmallHex.FRONT_MAX_EXTEND && frontInPosition == false) {
-      frontPower = 0.1;
+    if (Robot.climber.getFrontPosition() > ClimberPointsBareHex.FRONT_MAX_EXTEND && frontInPosition == false) {
+      frontPower = 0.2;
     }
 
-    if (Robot.climber.getFrontPosition() > ClimberPointsSmallHex.FRONT_MAX_EXTEND_SLOW_DOWN && frontInPosition == false) {
-      frontPower = 0.6;
+    if (Robot.climber.getFrontPosition() > ClimberPointsBareHex.FRONT_MAX_EXTEND_SLOW_DOWN && frontInPosition == false) {
+      frontPower = 0.5;
     }
 
-    if (Robot.climber.getFrontPosition() <= ClimberPointsSmallHex.FRONT_MAX_EXTEND && frontInPosition == false) {
+    if (Robot.climber.getFrontPosition() <= ClimberPointsBareHex.FRONT_MAX_EXTEND && frontInPosition == false) {
       frontInPosition = true;
       frontPower = 0;
     }
 
-    if (Robot.climber.getFrontPosition() <= ClimberPointsSmallHex.REAR_SAFE_EXTEND) {
-      rearPower = 0;
+    if (frontInPosition == true) {
+      rearPower = 0.4;
     }
 
     Robot.climber.setClimberPowers(frontPower, rearPower);
@@ -60,6 +62,6 @@ public class MaxExtend extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return frontInPosition && Robot.climber.getRearPosition() >= ClimberPointsSmallHex.REAR_MAX_EXTEND;
+    return frontInPosition && Robot.climber.getRearPosition() >= ClimberPointsBareHex.REAR_MAX_EXTEND;
   }
 }
