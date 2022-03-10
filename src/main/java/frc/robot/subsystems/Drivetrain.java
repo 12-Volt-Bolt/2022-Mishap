@@ -9,15 +9,26 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.tools.PriorityHandler;
+import frc.robot.tools.RollingAverage;
 
 public class Drivetrain extends SubsystemBase {
   
   private final CANSparkMax rightMotor1 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
-  private final CANSparkMax rightMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
-  private final CANSparkMax leftMotor1 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
-  private final CANSparkMax leftMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT1, MotorType.kBrushless);
+  private final CANSparkMax rightMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.RIGHT2, MotorType.kBrushless);
+  private final CANSparkMax leftMotor1 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.LEFT1, MotorType.kBrushless);
+  private final CANSparkMax leftMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.LEFT2, MotorType.kBrushless);
 
   private final PriorityHandler<DrivePower> priorityHandler = new PriorityHandler<DrivePower>();
+  private final RollingAverage rightRollingAverage = new RollingAverage(50);
+  private final RollingAverage leftRollingAverage = new RollingAverage(50);
+
+  public Drivetrain() {
+    rightRollingAverage.resetWhenApproachingZero = true;
+    leftRollingAverage.resetWhenApproachingZero = true;
+
+    rightRollingAverage.speedReductionAmount = 10;
+    leftRollingAverage.speedReductionAmount = 10;
+  }
 
   @Override
   public void periodic() {
@@ -27,13 +38,12 @@ public class Drivetrain extends SubsystemBase {
       request = new DrivePower(0, 0);
     }
 
-    setMotorPowers(request.right, request.left);
+    rightRollingAverage.addSample(request.right);
+    leftRollingAverage.addSample(request.left);
+
+    setMotorPowers(rightRollingAverage.getAverage(), leftRollingAverage.getAverage());
 
     priorityHandler.clearRequests();
-  }
-
-  public void register(Object requester, int priority) {
-    priorityHandler.register(requester, priority);
   }
 
   /**
@@ -55,50 +65,52 @@ public class Drivetrain extends SubsystemBase {
    * @param powerY The robot's rotation around the vertical axis. Positive is clockwise.
    * @author Lucas Brunner
    */
-  public void arcadeDrive(double powerZ, double powerY, Object requester) {
+  public void arcadeDrive(double powerZ, double powerY, double priority) {
     double rightOutput = -powerZ;
     double leftOutput = -powerZ;
 
     rightOutput += powerY;
     leftOutput -= powerY;
     
-    priorityHandler.setRequest(requester, new DrivePower(rightOutput, leftOutput));
+    priorityHandler.setRequest(priority, new DrivePower(rightOutput, leftOutput));
   }
 
   /**
    * Arcade-style drivetrain input. Max values are 1, min values are -1.
    * Math is applied to limit how often the motors run at 100%.
-   * @param powerZ The robot's power forward and backward. Positive is forward.
-   * @param powerY The robot's rotation around the vertical axis. Positive is clockwise.
+   * @param powerY The robot's power forward and backward. Positive is forward.
+   * @param powerZ The robot's rotation around the vertical axis. Positive is clockwise.
    * @author Lucas Brunner
    */
-  public void arcadeDriveTurnThrottle(double powerZ, double powerY, Object requester) {
+  public void arcadeDriveTurnThrottle(double powerY, double powerZ, double priority) {
     double rightOutput = 0;
     double leftOutput = 0;
+
+    powerZ = -powerZ;
     
-    double maxInput = Math.copySign(Math.max(Math.abs(powerZ), Math.abs(powerY)), powerZ);
+    double maxInput = Math.copySign(Math.max(Math.abs(powerY), Math.abs(powerZ)), powerY);
     
-    if (powerZ >= 0.0) {
+    if (powerY >= 0.0) {
       // First quadrant, else second quadrant
-      if (powerY >= 0.0) {
+      if (powerZ >= 0.0) {
         leftOutput = maxInput;
-        rightOutput = powerZ - powerY;
+        rightOutput = powerY - powerZ;
       } else {
-        leftOutput = powerZ + powerY;
+        leftOutput = powerY + powerZ;
         rightOutput = maxInput;
       }
     } else {
       // Third quadrant, else fourth quadrant
-      if (powerY >= 0.0) {
-        leftOutput = powerZ + powerY;
+      if (powerZ >= 0.0) {
+        leftOutput = powerY + powerZ;
         rightOutput = maxInput;
       } else {
         leftOutput = maxInput;
-        rightOutput = powerZ - powerY;
+        rightOutput = powerY - powerZ;
       }
     }
     
-    priorityHandler.setRequest(requester, new DrivePower(rightOutput, leftOutput));
+    priorityHandler.setRequest(priority, new DrivePower(rightOutput, leftOutput));
   }
 
   /**
@@ -107,8 +119,8 @@ public class Drivetrain extends SubsystemBase {
    * @param right power of the right wheels.
    * @author Lucas Brunner
    */
-  public void tankDrive(double right, double left, Object requester) {
-    priorityHandler.setRequest(requester, new DrivePower(right, left));
+  public void tankDrive(double right, double left, double priority) {
+    priorityHandler.setRequest(priority, new DrivePower(right, left));
   }
 }
 

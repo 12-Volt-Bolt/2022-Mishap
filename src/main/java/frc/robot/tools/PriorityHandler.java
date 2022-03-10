@@ -5,37 +5,28 @@ import java.util.Set;
 
 public class PriorityHandler<T> {
 
-  private final HashMap<Object, Integer> objectPriorities = new HashMap<Object, Integer>();
-  private final HashMap<Object, T> priorityRequests = new HashMap<Object, T>();
+  private final HashMap<Double, T> priorityRequests = new HashMap<Double, T>();
 
-  public void register(Object requester, int priority) {
-    objectPriorities.put(requester, priority);
-  }
-
-  public void setRequest(Object requester, T value) {
-    if (isRegistered(requester)) {
-      priorityRequests.put(requester, value);
-    }
+  public void setRequest(double priority, T value) {
+    priorityRequests.put(priority, value);
   }
 
   public void clearRequests() {
     priorityRequests.clear();
   }
 
-  public boolean isRegistered(Object requester) {
-    return objectPriorities.containsKey(requester);
-  }
-
   public T getHighestPriorityRequest() {
-    Set<Object> requesters = priorityRequests.keySet();
-    Object maxPriorityObject = null;
-    for (Object requester : requesters) {
-      if (maxPriorityObject == null) {
-        maxPriorityObject = requester;
-      } else if (objectPriorities.get(maxPriorityObject) < objectPriorities.get(requester)) {
-        maxPriorityObject = requester;
+    Set<Double> priorities = priorityRequests.keySet();
+    if (priorities.size() <= 0) {
+      return null;
+    } else {
+      double highestPriority = Double.NEGATIVE_INFINITY;
+      for (Double d : priorities) {
+        if (d > highestPriority) {
+          highestPriority = d;
+        }
       }
+      return priorityRequests.get(highestPriority);
     }
-    return priorityRequests.get(maxPriorityObject);
   }
 }

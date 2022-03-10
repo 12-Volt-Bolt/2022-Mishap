@@ -1,19 +1,21 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.tools.Equations;
+import frc.robot.tools.PriorityHandler;
 
 public class Intake extends SubsystemBase {
   public enum IntakePosition {
-      Up (3680)
-    , Down (-1770);
+      Up (3300)
+    , Down (280)
+    , None (3300);
 
     int position;
 
@@ -26,16 +28,23 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  private final VictorSPX conveyorMotor = new VictorSPX(frc.robot.constants.robotmap.motor.Intake.CONVEYOR);
+  private final CANSparkMax conveyorMotor = new CANSparkMax(frc.robot.constants.robotmap.motor.Intake.CONVEYOR, MotorType.kBrushless);
   private final TalonSRX armMotor = new TalonSRX(frc.robot.constants.robotmap.motor.Intake.ARTICULATION);
 
   private PIDController PID = new PIDController(.075, 0, 0);
-  private IntakePosition currentPosition = IntakePosition.Up;
-  private boolean userControl = true;
+  private IntakePosition currentPosition = IntakePosition.None;
+
+  private PriorityHandler<Double> conveyorPriority = new PriorityHandler<Double>();
+
+  public boolean doIntakeArticulation = true;
   
   public Intake() {
     armMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     PID.setTolerance(20);
+  }
+
+  public void restIntakeArticulation() {
+    armMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   /**
@@ -43,29 +52,8 @@ public class Intake extends SubsystemBase {
    * @param power Power of the conveyor.
    * @author Lucas Brunner
    */
-  public void setConveyorPower(double power) {
-    conveyorMotor.set(VictorSPXControlMode.PercentOutput, power);
-  }
-
-  /**
-   * Sets the power of the conveyor. Max value is 1, min value is -1. Sets power to 0 if the intake is up.
-   * @param power Power of the conveyor.
-   * @author Lucas Brunner
-   */
-  public void setConveyorPowerPositionLimited(double power) {
-    if (currentPosition == IntakePosition.Down) {
-      conveyorMotor.set(VictorSPXControlMode.PercentOutput, power);
-    } else {
-      stopConveyor();
-    }
-  }
-
-  /**
-   * Sets the power of the conveyor's motor to 0.
-   * @author Lucas Brunner
-   */
-  public void stopConveyor() {
-    setConveyorPower(0);
+  public void setConveyorPower(double power, double priority) {
+    conveyorPriority.setRequest(priority, power);
   }
   
   /**
@@ -73,7 +61,7 @@ public class Intake extends SubsystemBase {
    * @return The value of the intake's encoder.
    * @author Lucas Brunner
    */
-  public double getArmPos() {
+  public double getIntakePos() {
     return armMotor.getSelectedSensorPosition();
   }
 
@@ -83,15 +71,7 @@ public class Intake extends SubsystemBase {
    * @author Lucas Brunner
    */
   public void setArmPower(double power) {
-    armMotor.set(TalonSRXControlMode.PercentOutput, power);
-  }
-
-  /**
-   * Sets the power of the arm's motor to 0.
-   * @author Lucas Brunner
-   */
-  public void stopArm() {
-    setArmPower(0);
+    armMotor.set(ControlMode.PercentOutput, power);
   }
 
   /**
@@ -99,19 +79,8 @@ public class Intake extends SubsystemBase {
    * @param goalPosition Goal intake position state.
    * @author Lucas Brunner
    */
-  public void setGoalPosition(IntakePosition goalPosition) {
+  public void setGoalPosition(IntakePosition goalPosition, double priority) {
     currentPosition = goalPosition;
-  }
-
-  /**
-   * Sets goal position state of the intake. If userControl is set to false the input is ignored.
-   * @param goalPosition Goal intake position state.
-   * @author Lucas Brunner
-   */
-  public void setGoalPositionUser(IntakePosition goalPosition) {
-    if (userControl == true) {
-      currentPosition = goalPosition;
-    }
   }
 
   /**
@@ -122,23 +91,48 @@ public class Intake extends SubsystemBase {
     return currentPosition;
   }
 
-  /**
-   * Sets whether the user can control the intake.
-   * @param state The state to be set to.
-   * @author Lucas Brunner
-   */
-  public void setUserControl(boolean state) {
-    userControl = state;
+  private double calculateIntakeArticulationPower() {
+    double moveSpeed = 0;
+    switch (currentPosition) {
+      case Up:
+        armMotor.setNeutralMode(NeutralMode.Brake);
+        if (getIntakePos() < IntakePosition.Up.GetPosition() - 500) {
+          moveSpeed = 0.3;
+        } else if (getIntakePos() < IntakePosition.Up.GetPosition() - 25) {
+          moveSpeed = 0.1;
+        }
+        break;
+      case Down:
+        armMotor.setNeutralMode(NeutralMode.Coast);
+        if (getIntakePos() > IntakePosition.Down.GetPosition() + 700) {
+          moveSpeed = -0.3;
+        } else if (getIntakePos() > IntakePosition.Down.GetPosition() + 100) {
+          moveSpeed = -0.1;
+        }
+        break;
+      default:
+        armMotor.setNeutralMode(NeutralMode.Coast);
+        break;
+    }
+    return moveSpeed;
   }
 
   @Override
   public void periodic() {
-    PID.setSetpoint(currentPosition.GetPosition());
+    if (doIntakeArticulation) {
+      setArmPower(calculateIntakeArticulationPower());
+    }
 
-    double moveSpeed = getArmPos();
-    moveSpeed = PID.calculate(moveSpeed);
-    moveSpeed = Equations.clamp(moveSpeed / 100, -0.5, 0.5);
+    if (currentPosition == IntakePosition.Up) {
+      conveyorPriority.setRequest(Double.POSITIVE_INFINITY, 0.0);
+    }
 
-    setArmPower(moveSpeed);
+    double intakePower = 0;
+    if (conveyorPriority.getHighestPriorityRequest() != null) {
+      intakePower = conveyorPriority.getHighestPriorityRequest();
+    }
+    
+    conveyorMotor.set(-intakePower);
+    conveyorPriority.clearRequests();
   }
 }

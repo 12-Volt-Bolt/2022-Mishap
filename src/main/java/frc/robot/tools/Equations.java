@@ -122,14 +122,9 @@ public class Equations {
      * 
      * @return Whether the input is within the given range. (True/False)
      */
-    public static boolean range(double input, double min, double max)
+    public static boolean withinRange(double input, double min, double max)
     {
-        boolean output = false;
-        if (input <= max && input >= min)
-        {
-            output = true;
-        }
-        return output;
+        return input >= min && input <= max;
     }
 
     /**
@@ -143,11 +138,10 @@ public class Equations {
      */
     public static int wrap(int input, int min, int max)
     {
-        min--;
         int range = max - min;
         while (range(input, min, max) == false)
         {
-            if (input >= max){
+            if (input > max){
                 input -= range;
             } else {
                 input += range;

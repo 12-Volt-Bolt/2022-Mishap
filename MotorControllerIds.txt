@@ -1,0 +1,11 @@
+rear winch = 10
+front winch = 12
+shooter left = 7
+shooter right = 9
+intake rollers = 3
+intake mover = 14
+rf = 5
+rr = 6
+lf = 11
+lr = 2
+feeder wheel = 13
