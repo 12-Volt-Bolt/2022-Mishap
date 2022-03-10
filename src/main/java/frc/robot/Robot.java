@@ -108,8 +108,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     drivetrain.arcadeDriveTurnThrottle(
-        joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Y_AXIS) * 0.5
-      , joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Z_AXIS) * 0.5
+        joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Y_AXIS) * 0.7
+      , joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Z_AXIS) * 0.7
       , 0
       );
 
@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
           intake.setGoalPosition(IntakePosition.Up, 0);
           break;
         default:
-          intake.setGoalPosition(IntakePosition.Up, 0);
+          intake.setGoalPosition(IntakePosition.Down, 0);
           break;
       }
     }

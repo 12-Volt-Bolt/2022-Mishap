@@ -11,6 +11,7 @@ public class ClimberPointsBareHex {
   public static final double REAR_PULL_UP = 0;
 
   public static final double FRONT_SAFE_EXTEND = 0;
+  public static final double REAR_SAFE_EXTEND = 20;
 
   public static final double FRONT_FINAL_EXTEND = -100;
 }

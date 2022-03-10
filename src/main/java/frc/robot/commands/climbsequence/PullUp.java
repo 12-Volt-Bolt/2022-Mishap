@@ -65,9 +65,17 @@ public class PullUp extends CommandBase {
 
     if (frontPulledUp == true && rearPulledUp == true && swingWait.isFinished()) {
       frontPower = 0.2;
+      rearPower = 0.2;
     }
 
-    if (frontPulledUp == true && rearPulledUp == true && Robot.climber.getFrontPosition() < ClimberPointsBareHex.FRONT_SAFE_EXTEND) {
+    if (frontPulledUp == true && rearPulledUp == true) {
+      if (Robot.climber.getFrontPosition() < ClimberPointsBareHex.FRONT_SAFE_EXTEND) {
+        frontPower = 0;
+      }
+      if (Robot.climber.getRearPosition() < ClimberPointsBareHex.REAR_SAFE_EXTEND) {
+        rearPower = 0;
+      }
+      if (Robot.climber.getFrontPosition() < ClimberPointsBareHex.FRONT_SAFE_EXTEND && Robot.climber.getRearPosition() < ClimberPointsBareHex.REAR_SAFE_EXTEND)
       end = true;
     }
     

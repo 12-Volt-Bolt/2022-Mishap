@@ -123,7 +123,7 @@ public class Intake extends SubsystemBase {
       setArmPower(calculateIntakeArticulationPower());
     }
 
-    if (currentPosition == IntakePosition.Up) {
+    if (currentPosition != IntakePosition.Down) {
       conveyorPriority.setRequest(Double.POSITIVE_INFINITY, 0.0);
     }
 
