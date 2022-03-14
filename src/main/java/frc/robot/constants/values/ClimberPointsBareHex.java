@@ -1,6 +1,7 @@
 package frc.robot.constants.values;
 
 public class ClimberPointsBareHex {
+  /*
   public static final double FRONT_MAX_EXTEND = -200;
   public static final double FRONT_MAX_EXTEND_SLOW_DOWN = -170;
 
@@ -11,6 +12,21 @@ public class ClimberPointsBareHex {
   public static final double REAR_PULL_UP = 0;
 
   public static final double FRONT_SAFE_EXTEND = 0;
+  public static final double REAR_SAFE_EXTEND = 20;
+
+  public static final double FRONT_FINAL_EXTEND = -100;
+  */
+
+  public static final double FRONT_MAX_EXTEND = -200;
+  public static final double FRONT_MAX_EXTEND_SLOW_DOWN = -180;
+
+  public static final double REAR_MAX_EXTEND = 85;
+
+  public static final double FRONT_PULL_UP = 25;
+  public static final double FRONT_PULL_UP_SLOW_DOWN = 5;
+  public static final double REAR_PULL_UP = 0;
+
+  public static final double FRONT_SAFE_EXTEND = -20;
   public static final double REAR_SAFE_EXTEND = 20;
 
   public static final double FRONT_FINAL_EXTEND = -100;

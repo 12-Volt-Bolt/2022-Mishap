@@ -70,7 +70,7 @@ public class HomeClimbArms extends CommandBase {
       frontReleaseTimer.reset();
     }
 
-    if (frontHomeReleased && frontReleaseTimer.isFinished()) {
+    if (frontHomeReleased && frontReleaseTimer.isFinished() && rearHomeDone == true) {
       frontPower = -0.2;
     }
 

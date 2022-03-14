@@ -19,13 +19,13 @@ public class MainClimbSequence extends SequentialCommandGroup {
   public MaxExtend maxExtend1 = new MaxExtend();
   public MaxExtend maxExtend2 = new MaxExtend();
 
-  public Wait3Seconds wait3Seconds1 = new Wait3Seconds();
-  public Wait3Seconds wait3Seconds2 = new Wait3Seconds();
+  public Wait3Seconds wait3Seconds1 = new Wait3Seconds(1000);
+  public Wait3Seconds wait3Seconds2 = new Wait3Seconds(3000);
 
   /** Creates a new MainClimbSequence. */
   public MainClimbSequence() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(pullUp1, maxExtend1, pullUp2, maxExtend2, pullUp3);
+    addCommands(pullUp1, wait3Seconds1, maxExtend1 /*, pullUp2, maxExtend2, pullUp3*/ );
   }
 }

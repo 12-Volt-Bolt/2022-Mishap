@@ -26,7 +26,7 @@ public class ReleaseRear extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Robot.climber.setClimberPowers(0, -0.03);
+    Robot.climber.setClimberPowers(0, -0.3);
     if (releaseTimer.isFinished()) {
       Robot.unlockServoRelease.schedule();
     }

@@ -32,20 +32,21 @@ public class AutoLockClimber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double frontPower = -0.1;
+    double frontPower = 0;
     double rearPower = -0.1;
-
-    if (Robot.climber.getFrontStop()) {
-      frontPower = 0;
-    }
 
     if (Robot.climber.getRearStop()) {
       rearPower = -0.03;
+      frontPower = -0.1;
       if (rearHomeSwitchHit == false) {
         rearHomeSwitchWait.reset();
         endTimer.reset();
       }
       rearHomeSwitchHit = true;
+    }
+
+    if (Robot.climber.getFrontStop()) {
+      frontPower = 0;
     }
 
     if (rearHomeSwitchWait.isFinished() && rearHomeSwitchHit == true) {

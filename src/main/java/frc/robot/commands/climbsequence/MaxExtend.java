@@ -8,7 +8,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.constants.values.ClimberPointsBareHex;
+import frc.robot.constants.values.ClimberPointsBigSprial;
+import frc.robot.subsystems.Intake.IntakePosition;
 
 public class MaxExtend extends CommandBase {
 
@@ -22,6 +23,8 @@ public class MaxExtend extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Robot.intake.setGoalPosition(IntakePosition.Down, 1);
+
     Robot.climber.setFrontIdle(IdleMode.kBrake);
 
     frontInPosition = false;
@@ -35,15 +38,15 @@ public class MaxExtend extends CommandBase {
     double frontPower = 0;
     double rearPower = -0.3;
     
-    if (Robot.climber.getFrontPosition() > ClimberPointsBareHex.FRONT_MAX_EXTEND && frontInPosition == false) {
+    if (Robot.climber.getFrontPosition() > ClimberPointsBigSprial.FRONT_MAX_EXTEND && frontInPosition == false) {
       frontPower = 0.2;
     }
 
-    if (Robot.climber.getFrontPosition() > ClimberPointsBareHex.FRONT_MAX_EXTEND_SLOW_DOWN && frontInPosition == false) {
+    if (Robot.climber.getFrontPosition() > ClimberPointsBigSprial.FRONT_MAX_EXTEND_SLOW_DOWN && frontInPosition == false) {
       frontPower = 0.5;
     }
 
-    if (Robot.climber.getFrontPosition() <= ClimberPointsBareHex.FRONT_MAX_EXTEND && frontInPosition == false) {
+    if (Robot.climber.getFrontPosition() <= ClimberPointsBigSprial.FRONT_MAX_EXTEND && frontInPosition == false) {
       frontInPosition = true;
       frontPower = 0;
     }
@@ -62,6 +65,6 @@ public class MaxExtend extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return frontInPosition && Robot.climber.getRearPosition() >= ClimberPointsBareHex.REAR_MAX_EXTEND;
+    return frontInPosition && Robot.climber.getRearPosition() >= ClimberPointsBigSprial.REAR_MAX_EXTEND;
   }
 }

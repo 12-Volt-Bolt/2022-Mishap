@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
   public static UnlockServoRelease unlockServoRelease = new UnlockServoRelease();
   public static LockServoRelease lockServoRelease = new LockServoRelease();
 
-  // public static ClimberControl manualClimberControl = new ClimberControl();
+  public static ClimberControl manualClimberControl = new ClimberControl();
   public static AutoLockClimber autoLockClimber = new AutoLockClimber();
   public static InitializeClimbSequence climbSequence = new InitializeClimbSequence();
   public static MainClimbSequence mainClimbSequence = new MainClimbSequence();
@@ -78,7 +78,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    SmartDashboard.putBoolean("Climber detected", climber.getFrontStop());
+  }
 
   @Override
   public void autonomousInit() {
@@ -102,6 +104,8 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putData(shootLowGoal);
     SmartDashboard.putData(shootHighGoal);
+
+    SmartDashboard.putData(manualClimberControl);
   }
 
   @Override

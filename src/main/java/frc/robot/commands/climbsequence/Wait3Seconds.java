@@ -12,7 +12,8 @@ public class Wait3Seconds extends CommandBase {
   private Timer timer = new Timer(3000);
 
   /** Creates a new Wait3Seconds. */
-  public Wait3Seconds() {
+  public Wait3Seconds(long time) {
+    Timer timer = new Timer(time);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

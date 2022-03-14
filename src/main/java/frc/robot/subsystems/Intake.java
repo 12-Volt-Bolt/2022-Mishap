@@ -95,7 +95,7 @@ public class Intake extends SubsystemBase {
     double moveSpeed = 0;
     switch (currentPosition) {
       case Up:
-        armMotor.setNeutralMode(NeutralMode.Brake);
+        armMotor.setNeutralMode(NeutralMode.Coast);
         if (getIntakePos() < IntakePosition.Up.GetPosition() - 500) {
           moveSpeed = 0.3;
         } else if (getIntakePos() < IntakePosition.Up.GetPosition() - 25) {
