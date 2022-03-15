@@ -164,7 +164,7 @@ public class Equations {
     /**
      * Normalize all values if the magnitude of any value is greater than 1.0.
      */
-    public static void normalize(double[] values) {
+    public static double[] normalize(double[] values) {
       double maxMagnitude = Math.abs(values[0]);
       for (int i = 1; i < values.length; i++) {
         double temp = Math.abs(values[i]);
@@ -173,10 +173,12 @@ public class Equations {
         }
       }
       if (maxMagnitude > 1.0) {
+          double percent = 1 / maxMagnitude;
         for (int i = 0; i < values.length; i++) {
-          values[i] = values[i] / maxMagnitude;
+          values[i] = values[i] * percent;
         }
       }
+      return values;
     }
 
     public static double normalize(double value, double inputRange, double outputRange)
@@ -261,7 +263,23 @@ public class Equations {
         return output;
     }
 
+    public static double floatModulo(double numerator, double denominator) {
 
+        double an = Math.abs(numerator);
+        double ad = Math.abs(denominator);
+        
+        double output = an;
+        double temp = an;
 
+        while(temp < an) {
+            output = temp;
+            temp -= ad;
+        }
 
+        if (Math.copySign(1, numerator) - Math.copySign(1, denominator) != 0) {
+            output = -output;
+        }
+
+        return output;
+    }
 }

@@ -8,8 +8,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.tools.Equations;
 import frc.robot.tools.PriorityHandler;
 import frc.robot.tools.RollingAverage;
+import frc.robot.tools.SlewRateLimiter;
 
 public class Drivetrain extends SubsystemBase {
   
@@ -19,24 +21,11 @@ public class Drivetrain extends SubsystemBase {
   private final CANSparkMax leftMotor2 = new CANSparkMax(frc.robot.constants.robotmap.motor.Drivetrain.LEFT2, MotorType.kBrushless);
 
   private final PriorityHandler<DrivePower> priorityHandler = new PriorityHandler<DrivePower>();
-  private final RollingAverage rightRollingAverage = new RollingAverage(50);
-  private final RollingAverage leftRollingAverage = new RollingAverage(50);
-  private final RollingAverage yRollingAverage = new RollingAverage(50);
-  private final RollingAverage zRollingAverage = new RollingAverage(50);
 
-  public Drivetrain() {
-    rightRollingAverage.resetWhenApproachingZero = true;
-    leftRollingAverage.resetWhenApproachingZero = true;
+  
 
-    rightRollingAverage.speedReductionAmount = 10;
-    leftRollingAverage.speedReductionAmount = 10;
-    
-    yRollingAverage.resetWhenApproachingZero = true;
-    zRollingAverage.resetWhenApproachingZero = true;
-
-    yRollingAverage.speedReductionAmount = 10;
-    zRollingAverage.speedReductionAmount = 10;
-  }
+  private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(0.04);
+  private SlewRateLimiter zSlewRateLimiter = new SlewRateLimiter(0.04);
 
   @Override
   public void periodic() {
@@ -46,10 +35,6 @@ public class Drivetrain extends SubsystemBase {
       request = new DrivePower(0, 0);
     }
 
-    rightRollingAverage.addSample(request.right);
-    leftRollingAverage.addSample(request.left);
-
-    //setMotorPowers(rightRollingAverage.getAverage(), leftRollingAverage.getAverage());
     setMotorPowers(request.right, request.left);
 
     priorityHandler.clearRequests();
@@ -70,16 +55,40 @@ public class Drivetrain extends SubsystemBase {
   
   /**
    * Arcade-style drivetrain input. Max values are 1, min values are -1.
-   * @param powerZ The robot's power forward and backward. Positive is forward.
-   * @param powerY The robot's rotation around the vertical axis. Positive is clockwise.
+   * @param powerY The robot's power forward and backward. Positive is forward.
+   * @param powerZ The robot's rotation around the vertical axis. Positive is clockwise.
    * @author Lucas Brunner
    */
-  public void arcadeDrive(double powerZ, double powerY, double priority) {
-    double rightOutput = -powerZ;
-    double leftOutput = -powerZ;
+  public void arcadeDrive(double powerY, double powerZ, double priority) {
 
-    rightOutput += powerY;
-    leftOutput -= powerY;
+    powerZ *= 0.5;
+
+    double rightOutput = powerY + powerZ;
+    double leftOutput = powerY - powerZ;
+    
+    priorityHandler.setRequest(priority, new DrivePower(rightOutput, leftOutput));
+  }
+
+  public void arcadeDriveTurnRollover(double powerY, double powerZ, double priority) {
+
+    powerZ *= 0.5;
+
+    double[] normalizedPower = Equations.normalize(new double[] { powerY, powerZ });
+
+    powerY = normalizedPower[0];
+    powerZ = normalizedPower[1];
+    
+    powerY = ySlewRateLimiter.getOutputValue(powerY);
+    powerZ = zSlewRateLimiter.getOutputValue(powerZ);
+
+    double rightOutput = powerY + powerZ;
+    double leftOutput = powerY - powerZ;
+
+    if (Math.abs(rightOutput) > 1) {
+      leftOutput -= Equations.floatModulo(rightOutput, 1);
+    } else if (Math.abs(leftOutput) > 1) {
+      rightOutput -= Equations.floatModulo(leftOutput, 1);
+    }
     
     priorityHandler.setRequest(priority, new DrivePower(rightOutput, leftOutput));
   }
@@ -92,11 +101,9 @@ public class Drivetrain extends SubsystemBase {
    * @author Lucas Brunner
    */
   public void arcadeDriveTurnThrottle(double powerY, double powerZ, double priority) {
-    yRollingAverage.addSample(powerY);
-    zRollingAverage.addSample(powerZ);
-
-    powerY = yRollingAverage.getAverage();
-    powerZ = zRollingAverage.getAverage();
+    
+    powerY = ySlewRateLimiter.getOutputValue(powerY);
+    powerZ = zSlewRateLimiter.getOutputValue(powerZ);
 
     double rightOutput = 0;
     double leftOutput = 0;

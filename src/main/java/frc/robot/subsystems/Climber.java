@@ -54,12 +54,15 @@ public class Climber extends SubsystemBase {
     }
     
     frontWinch.set(frontPowerSet);
+    rearWinch.set(rearPowerSet);
 
     frontPowerSet = 0;
     rearPowerSet = 0;
 
     SmartDashboard.putNumber("Front position", getFrontPosition());
     SmartDashboard.putNumber("Rear position", getRearPosition());
+    SmartDashboard.putNumber("Front velocity", getFrontVelocity());
+    SmartDashboard.putNumber("Rear velocity", getRearVelocity());
   }
 
   public void setFrontIdle(IdleMode idleMode) {
@@ -80,6 +83,14 @@ public class Climber extends SubsystemBase {
 
   public double getRearPosition() {
     return rearWinch.getEncoder().getPosition() - rearHomeValue;
+  }
+
+  public double getFrontVelocity() {
+    return frontWinch.getEncoder().getVelocity();
+  }
+
+  public double getRearVelocity() {
+    return rearWinch.getEncoder().getVelocity();
   }
 
   public void setClimberPowers(double frontPower, double rearPower) {

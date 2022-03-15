@@ -5,35 +5,49 @@
 package frc.robot.commands.climbsequence;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.tools.Timer;
 
-public class Wait3Seconds extends CommandBase {
+public class VelocityHomeRearArm extends CommandBase {
 
-  private Timer timer = new Timer(3000);
+  private boolean endCommand = false;
 
-  /** Creates a new Wait3Seconds. */
-  public Wait3Seconds(long time) {
-    timer = new Timer(time);
+  private Timer checkVelocityStartTime = new Timer(500);
+
+  /** Creates a new VelocityHomeClimber. */
+  public VelocityHomeRearArm() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
+    endCommand = false;
+    checkVelocityStartTime.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    
+    if (Robot.climber.getRearVelocity() > -400 && checkVelocityStartTime.isFinished()) {
+      endCommand = true;
+    }
+
+    Robot.climber.setClimberPowers(0, -0.1);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if (interrupted == false) {
+      Robot.climber.setRearHome();
+    }
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.isFinished();
+    return endCommand;
   }
 }
