@@ -50,12 +50,12 @@ public class Robot extends TimedRobot {
 
   public static EasyPov feederPov = new EasyPov(new int[] { 1, 0, 0, 0, -1, 0, 0, 0 }, 0);
 
-  public static SpinShooterFromSmartdashboard spinShooterFromSmartdashboard = new SpinShooterFromSmartdashboard();
+  // public static SpinShooterFromSmartdashboard spinShooterFromSmartdashboard = new SpinShooterFromSmartdashboard();
 
   public static UnlockServoRelease unlockServoRelease = new UnlockServoRelease();
   public static LockServoRelease lockServoRelease = new LockServoRelease();
 
-  public static ClimberControl manualClimberControl = new ClimberControl();
+  // public static ClimberControl manualClimberControl = new ClimberControl();
   public static AutoLockClimber autoLockClimber = new AutoLockClimber();
   public static InitializeClimbSequence climbSequence = new InitializeClimbSequence();
   public static MainClimbSequence mainClimbSequence = new MainClimbSequence();
@@ -75,14 +75,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    SmartDashboard.putData(doShootLowDrive);
-    SmartDashboard.putData(doShootHighDrive);
+    // SmartDashboard.putData(doShootLowDrive);
+    // SmartDashboard.putData(doShootHighDrive);
   }
 
   @Override
-  public void robotPeriodic() {
-    SmartDashboard.putBoolean("Climber detected", climber.getFrontStop());
-  }
+  public void robotPeriodic() {}
 
   @Override
   public void autonomousInit() {
@@ -100,15 +98,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    SmartDashboard.putData(autoLockClimberVelocity);
-    SmartDashboard.putData(climbSequence);
-    SmartDashboard.putData(mainClimbSequence);
+    // SmartDashboard.putData(autoLockClimberVelocity);
+    // SmartDashboard.putData(climbSequence);
+    // SmartDashboard.putData(mainClimbSequence);
     
     SmartDashboard.putData(shootLowGoal);
-    SmartDashboard.putData(shootHighGoal);
+    // SmartDashboard.putData(shootHighGoal);
 
-    SmartDashboard.putData(manualClimberControl);
-    SmartDashboard.putData(velocityHomeClimbArms);
+    // SmartDashboard.putData(manualClimberControl);
+    // SmartDashboard.putData(velocityHomeClimbArms);
   }
 
   @Override
@@ -148,7 +146,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    SmartDashboard.delete("shootHighGoal");    
+    SmartDashboard.delete("shootLowGoal");
+  }
 
   @Override
   public void disabledPeriodic() {}
