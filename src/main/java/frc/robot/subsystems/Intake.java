@@ -127,9 +127,9 @@ public class Intake extends SubsystemBase {
       conveyorPriority.setRequest(Double.POSITIVE_INFINITY, 0.0);
     }
 
-    double intakePower = 0;
-    if (conveyorPriority.getHighestPriorityRequest() != null) {
-      intakePower = conveyorPriority.getHighestPriorityRequest();
+    Double intakePower = conveyorPriority.getHighestPriorityRequest();
+    if (intakePower == null) {
+      intakePower = 0d;
     }
     
     conveyorMotor.set(-intakePower);

@@ -28,6 +28,18 @@ public class Climber extends SubsystemBase {
   private double frontPowerSet = 0;
   private double rearPowerSet = 0;
 
+  private boolean showDiagnostics = false;
+
+  public void setDiagnostics(boolean state) {
+    if (state == false) {
+      SmartDashboard.delete("Front position");
+      SmartDashboard.delete("Rear position");
+      SmartDashboard.delete("Front velocity");
+      SmartDashboard.delete("Rear velocity");
+    }
+    showDiagnostics = state;
+  }
+
   public boolean getFrontStop() {
     return !frontStop.get();
   }
@@ -59,10 +71,12 @@ public class Climber extends SubsystemBase {
     frontPowerSet = 0;
     rearPowerSet = 0;
 
-    SmartDashboard.putNumber("Front position", getFrontPosition());
-    SmartDashboard.putNumber("Rear position", getRearPosition());
-    SmartDashboard.putNumber("Front velocity", getFrontVelocity());
-    SmartDashboard.putNumber("Rear velocity", getRearVelocity());
+    if (showDiagnostics == true) {
+      SmartDashboard.putNumber("Front position", getFrontPosition());
+      SmartDashboard.putNumber("Rear position", getRearPosition());
+      SmartDashboard.putNumber("Front velocity", getFrontVelocity());
+      SmartDashboard.putNumber("Rear velocity", getRearVelocity());
+    }
   }
 
   public void setFrontIdle(IdleMode idleMode) {
