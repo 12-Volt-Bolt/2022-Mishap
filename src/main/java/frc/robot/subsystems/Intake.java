@@ -13,9 +13,9 @@ import frc.robot.tools.PriorityHandler;
 
 public class Intake extends SubsystemBase {
   public enum IntakePosition {
-      Up (3300)
-    , Down (280)
-    , None (3300);
+      Up (6500)
+    , Down (4000)
+    , None (6500);
 
     int position;
 

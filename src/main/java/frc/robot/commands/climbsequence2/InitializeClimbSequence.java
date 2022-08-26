@@ -2,24 +2,33 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.climbsequence;
+package frc.robot.commands.climbsequence2;
+
+import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.climbsequence.ReleaseRear;
+import frc.robot.commands.climbsequence.VelocityHomeRearArm;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class InitializeClimbSequence extends SequentialCommandGroup {
 
-  public HomeFrontClimber homeFrontClimber = new HomeFrontClimber();
   public ReleaseRear releaseRear = new ReleaseRear();
-  public HomeClimbArms homeClimbArms = new HomeClimbArms();
-  public MaxExtend maxExtend1 = new MaxExtend();
+  public WaitTimeReleaseClimbers wait = new WaitTimeReleaseClimbers(700, new ArrayList<>());
+  public VelocityHomeRearArm velocityHomeRearArm = new VelocityHomeRearArm();
+  public MaxExtend maxExtend = new MaxExtend();
+  public StopArms end = new StopArms(maxExtend.getChildCommands());
 
   /** Creates a new ClimbSequence. */
   public InitializeClimbSequence() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(homeFrontClimber, releaseRear, homeClimbArms, maxExtend1);
+    addCommands(releaseRear, wait, velocityHomeRearArm, maxExtend, end);
+  }
+
+  public void endClimberControl() {
+    maxExtend.endClimberControl();
   }
 }

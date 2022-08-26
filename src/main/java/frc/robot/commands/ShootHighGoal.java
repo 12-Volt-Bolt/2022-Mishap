@@ -57,8 +57,8 @@ public class ShootHighGoal extends CommandBase {
     double power = t + feedForward;
     Robot.shooter.spin(power);
     
-    SmartDashboard.putNumber("Goal RPM", goalRPM);
-    SmartDashboard.putNumber("Current RPM", Robot.shooter.getVelocity());
+    // SmartDashboard.putNumber("Goal RPM", goalRPM);
+    // SmartDashboard.putNumber("Current RPM", Robot.shooter.getVelocity());
 
     if (shooterPID.atSetpoint() != true) {
       atSpeedTimer.reset();

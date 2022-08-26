@@ -34,7 +34,7 @@ public class VelocityHomeRearArm extends CommandBase {
       endCommand = true;
     }
 
-    Robot.climber.setClimberPowers(0, -0.1);
+    Robot.climber.setClimberPowers(0, -0.2);
   }
 
   // Called once the command ends or is interrupted.

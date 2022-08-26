@@ -14,7 +14,10 @@ public class HomeClimbArms extends CommandBase {
 
   boolean rearHomeReleased = false;
   boolean rearHomeDone = false;
+  boolean frontHomeDone = false;
+
   Timer rearReleaseTimer = new Timer(200);
+  Timer frontCheckDelay = new Timer(200);
 
   boolean frontHomeReleased = false;
   Timer frontReleaseTimer = new Timer(200);
@@ -33,6 +36,7 @@ public class HomeClimbArms extends CommandBase {
 
     rearHomeReleased = false;
     rearHomeDone = false;
+    frontHomeDone = false;
 
     frontHomeReleased = false;
 
@@ -50,35 +54,44 @@ public class HomeClimbArms extends CommandBase {
       rearReleaseTimer.reset();
     }
 
-    if (rearHomeReleased && rearReleaseTimer.isFinished()) {
+    if (rearHomeReleased == true && rearReleaseTimer.isFinished()) {
       rearPower = -0.2;
     }
 
-    if (rearHomeReleased && Robot.climber.getRearStop() && rearHomeDone == false && rearReleaseTimer.isFinished()) {
+    if (rearHomeReleased == true && Robot.climber.getRearStop() == true && rearHomeDone == false && rearReleaseTimer.isFinished()) {
       rearHomeDone = true;
       rearPower = -0.02;
       Robot.climber.setRearHome();
     }
 
-    if (rearHomeDone && frontHomeReleased == false && Robot.climber.getFrontStop() == true) {
-      frontPower = 0.2;
-      Robot.climber.setFrontIdle(IdleMode.kBrake);
-    }
+    // if (rearHomeDone == true && frontHomeReleased == false) {
+    //   frontPower = 0.2;
+    //   frontCheckDelay.reset();
+    //   Robot.climber.setFrontIdle(IdleMode.kBrake);
+    // }
 
-    if (rearHomeDone && frontHomeReleased == false && Robot.climber.getFrontStop() == false) {
-      frontHomeReleased = true;
-      frontReleaseTimer.reset();
-    }
+    // if (rearHomeDone == true && frontHomeReleased == false && frontCheckDelay.isFinished() && Robot.climber.getFrontVelocity() < 1000) {
+    //   frontHomeReleased = true;
+    //   frontReleaseTimer.reset();
+    // }
 
-    if (frontHomeReleased && frontReleaseTimer.isFinished() && rearHomeDone == true) {
-      frontPower = -0.2;
-    }
+    // if (rearHomeDone == true && frontHomeReleased == false) {
+    //   frontHomeReleased = true;
+    //   frontCheckDelay.reset();
+    // }
 
-    if (frontHomeReleased && Robot.climber.getFrontStop() && frontReleaseTimer.isFinished()) {
-      Robot.climber.setFrontHome();
-      frontPower = 0;
-      endCommand = true;
-    }
+    // if (rearHomeDone == true) {
+    //   frontPower = -0.2;
+    // }
+
+    // System.out.println("Front home: " + frontHomeReleased + ", front delay: " + frontCheckDelay.isFinished() + ", front velocity: " + Robot.climber.getFrontVelocity());
+
+    // if (frontHomeReleased == true && frontCheckDelay.isFinished() == true && Robot.climber.getFrontVelocity() < 1100) {
+    //   System.out.println("Front climber home position: " + Robot.climber.getFrontPosition());
+    //   Robot.climber.setFrontHome();
+    //   frontPower = 0;
+    //   endCommand = true;
+    // }
 
     Robot.climber.setClimberPowers(frontPower, rearPower);
   }
@@ -90,6 +103,6 @@ public class HomeClimbArms extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return endCommand;
+    return rearHomeDone;
   }
 }
