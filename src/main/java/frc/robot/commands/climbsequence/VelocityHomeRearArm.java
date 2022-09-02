@@ -42,6 +42,7 @@ public class VelocityHomeRearArm extends CommandBase {
   public void end(boolean interrupted) {
     if (interrupted == false) {
       Robot.climber.setRearHome();
+      // Robot.climber.setFrontEncoderHome();
     }
   }
 

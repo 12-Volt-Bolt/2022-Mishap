@@ -130,6 +130,10 @@ public class Climber extends SubsystemBase {
     frontHomeValue = frontWinch.getEncoder().getPosition();
   }
 
+  public void setFrontEncoderHome() {
+    armEncoder.reset();;
+  }
+
   public void setRearHome() {
     rearHomeValue = rearWinch.getEncoder().getPosition();
   }

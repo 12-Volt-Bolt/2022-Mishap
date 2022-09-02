@@ -124,6 +124,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Front percentage", climber.getFrontPercentage());
+    SmartDashboard.putNumber("Front value", climber.getArmEncoder());
 
     drivetrain.arcadeDriveTurnRollover(
         IOTools.axisDeadzoneRemap(

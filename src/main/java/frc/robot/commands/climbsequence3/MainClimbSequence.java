@@ -59,7 +59,7 @@ public class MainClimbSequence extends CommandBase {
   public void initialize() {
     commandList.clear();
 
-    commandList.add(new ClimbCommandData(-0.07, 1.0, "Front Pull Down").setFrontSettings(0.05, -0.15, DirectionRestriction.NONE).setRearSettings(0.05, 0.0, DirectionRestriction.NONE));
+    commandList.add(new ClimbCommandData(-0.07, 1.0, "Front Pull Down").setFrontSettings(0.05, -0.125, DirectionRestriction.NONE).setRearSettings(0.05, 0.0, DirectionRestriction.NONE));
     commandList.add(new ClimbCommandData(Double.NaN, 0.1, "Rear Pull Down"));
     commandList.add(new ClimbCommandData(0.0, 0.1, "Front Let Up").setFrontSettings(0.05, 0.0, DirectionRestriction.NONE));
     commandList.add(new ClimbCommandData(Double.NaN, Double.NaN, "Settle", 500));
