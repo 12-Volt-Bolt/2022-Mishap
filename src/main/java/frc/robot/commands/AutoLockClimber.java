@@ -16,6 +16,9 @@ public class AutoLockClimber extends CommandBase {
   private Timer rearHomeSwitchWait = new Timer(2000);
   private boolean rearHomeSwitchHit = false;
 
+  private UnlockServoRelease unlockServoRelease = new UnlockServoRelease();
+  private LockServoRelease lockServoRelease = new LockServoRelease();
+
   /** Creates a new AutoLockClimber. */
   public AutoLockClimber() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +28,7 @@ public class AutoLockClimber extends CommandBase {
   @Override
   public void initialize() {
     rearHomeSwitchHit = false;
-    Robot.unlockServoRelease.schedule();
+    unlockServoRelease.schedule();
     Robot.climber.setFrontIdle(IdleMode.kCoast);
   }
 
@@ -50,7 +53,7 @@ public class AutoLockClimber extends CommandBase {
     }
 
     if (rearHomeSwitchWait.isFinished() && rearHomeSwitchHit == true) {
-      Robot.lockServoRelease.schedule();
+      lockServoRelease.schedule();
     }
 
     Robot.climber.setClimberPowers(frontPower, rearPower);

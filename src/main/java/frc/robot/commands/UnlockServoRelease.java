@@ -20,7 +20,7 @@ public class UnlockServoRelease extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.climber.setServo(0);
+    Robot.climber.setServo(0.1);
     endTime.reset();
   }
 
@@ -31,7 +31,7 @@ public class UnlockServoRelease extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.climber.disableServo();
+    // Robot.climber.disableServo();
   }
 
   // Returns true when the command should end.

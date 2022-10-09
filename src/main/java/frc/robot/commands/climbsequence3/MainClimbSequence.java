@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.commands.climbsequence3.ClimbCommandData.DirectionRestriction;
-import frc.robot.tools.Equations;
 import frc.robot.tools.Timer;
 
 public class MainClimbSequence extends CommandBase {
@@ -59,12 +57,12 @@ public class MainClimbSequence extends CommandBase {
   public void initialize() {
     commandList.clear();
 
-    commandList.add(new ClimbCommandData(-0.07, 1.0, "Front Pull Down").setFrontSettings(0.05, -0.125, DirectionRestriction.NONE).setRearSettings(0.05, 0.0, DirectionRestriction.NONE));
-    commandList.add(new ClimbCommandData(Double.NaN, 0.1, "Rear Pull Down"));
-    commandList.add(new ClimbCommandData(0.0, 0.1, "Front Let Up").setFrontSettings(0.05, 0.0, DirectionRestriction.NONE));
-    commandList.add(new ClimbCommandData(Double.NaN, Double.NaN, "Settle", 500));
+    commandList.add(new ClimbCommandData(0.1, 1.0, "Front Pull Down").setFrontSettings(0.05, -0.15, DirectionRestriction.NONE).setRearSettings(0.05, 0.0, DirectionRestriction.NONE));
+    commandList.add(new ClimbCommandData(0.1, 0.1, "Rear Pull Down").setFrontSettings(0.15, -0.15, DirectionRestriction.NONE).setRearSettings(0.05, -0.05, DirectionRestriction.NONE));
+    commandList.add(new ClimbCommandData(0.15, 0.1, "Front Let Up").setFrontSettings(0.15, 0.0, DirectionRestriction.NONE));
+    commandList.add(new ClimbCommandData(Double.NaN, Double.NaN, "Settle", 500).setRearSettings(0.05, 0.0, DirectionRestriction.NONE));
     commandList.add(new ClimbCommandData(Double.NaN, 0.5, "Rear Let Up"));
-    commandList.add(new ClimbCommandData(0.4, Double.NaN, "Front Mid Position"));
+    commandList.add(new ClimbCommandData(0.4, Double.NaN, "Front Mid Position").setFrontSettings(0.05, 0.0, DirectionRestriction.NONE));
     commandList.add(new ClimbCommandData(Double.NaN, 0.0, "Rear Pull Down"));
     commandList.add(new ClimbCommandData(0.9, Double.NaN, "Front Max Position").setFrontSettings(0.05, 0.0, DirectionRestriction.EXTEND));
     commandList.add(new ClimbCommandData(Double.NaN, 1.0, "Rear Max Position").setFrontSettings(10.0, 0.0, DirectionRestriction.ALL));

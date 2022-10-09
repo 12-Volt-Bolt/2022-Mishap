@@ -20,7 +20,7 @@ public class Climber extends SubsystemBase {
 
   public final CANSparkMax frontWinch = new CANSparkMax(frc.robot.constants.robotmap.motor.Climber.FRONT_WINCH, MotorType.kBrushless);
   public final CANSparkMax rearWinch = new CANSparkMax(frc.robot.constants.robotmap.motor.Climber.REAR_WINCH, MotorType.kBrushless);
-  private final Servo releaseServo = new Servo(9);
+  public final Servo releaseServo = new Servo(9);
 
   private final DigitalInput frontStop = new DigitalInput(0);
   private final DigitalInput rearStop = new DigitalInput(9);
@@ -169,6 +169,7 @@ public class Climber extends SubsystemBase {
 
   public void setServo(double position) {
     releaseServo.set(position);
+    System.out.println("Servo position: " + position);
   }
 
   public void disableServo() {

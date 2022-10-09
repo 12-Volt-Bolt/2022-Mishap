@@ -24,13 +24,14 @@ public class VelocityHomeRearArm extends CommandBase {
   public void initialize() {
     endCommand = false;
     checkVelocityStartTime.reset();
+    Robot.climber.setServo(0.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     
-    if (Robot.climber.getRearVelocity() > -400 && checkVelocityStartTime.isFinished()) {
+    if (Robot.climber.getRearVelocity() > -200 && checkVelocityStartTime.isFinished()) {
       endCommand = true;
     }
 

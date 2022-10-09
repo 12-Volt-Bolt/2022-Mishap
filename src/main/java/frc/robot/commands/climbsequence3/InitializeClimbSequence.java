@@ -56,7 +56,7 @@ public class InitializeClimbSequence extends CommandBase {
         Robot.climber.setRearClimbPower(0.4);
       } else {
         Robot.climber.setRearClimbPower(0);
-        if (Robot.climber.getFrontPercentage() < 1.3) {
+        if (Robot.climber.getFrontPercentage() < 1.1) {
           Robot.climber.setFrontClimbPower(0.3);
         } else {
           Robot.climber.setFrontClimbPower(0);
@@ -67,7 +67,9 @@ public class InitializeClimbSequence extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Robot.climber.disableServo();
+  }
 
   // Returns true when the command should end.
   @Override

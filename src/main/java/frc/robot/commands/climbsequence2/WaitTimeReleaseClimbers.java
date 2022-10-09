@@ -7,7 +7,6 @@ package frc.robot.commands.climbsequence2;
 import java.util.List;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.tools.Timer;
 
 public class WaitTimeReleaseClimbers extends CommandBase {

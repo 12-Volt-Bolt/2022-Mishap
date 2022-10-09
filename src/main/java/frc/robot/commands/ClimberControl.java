@@ -10,14 +10,17 @@ import frc.robot.Robot;
 
 public class ClimberControl extends CommandBase {
   /** Creates a new ClimberControl. */
-  public ClimberControl() {}
+  public ClimberControl() {
+    SmartDashboard.putNumber("Top power", 0);
+    SmartDashboard.putNumber("Bottom power", 0);
+  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  SmartDashboard.putNumber("Top power", 0);
-  SmartDashboard.putNumber("Bottom power", 0);
-}
+    SmartDashboard.putNumber("Top power", 0);
+    SmartDashboard.putNumber("Bottom power", 0);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

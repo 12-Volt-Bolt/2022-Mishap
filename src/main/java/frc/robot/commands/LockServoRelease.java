@@ -19,19 +19,18 @@ public class LockServoRelease extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.climber.setServo(1);
     endTime.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    Robot.climber.setServo(1);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    Robot.climber.disableServo();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

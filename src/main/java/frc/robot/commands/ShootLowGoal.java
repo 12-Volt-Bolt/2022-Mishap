@@ -29,7 +29,7 @@ public class ShootLowGoal extends CommandBase {
   @Override
   public void execute() {
 
-    Robot.shooter.spin(0.25);
+    Robot.shooter.spin(0.275);
 
     if (speedUpTimer.isFinished() == false) {
       emptyStorageTimer.reset();

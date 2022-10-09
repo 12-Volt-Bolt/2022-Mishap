@@ -4,28 +4,15 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoLockClimberVelocity;
-import frc.robot.commands.ClimberControl;
-import frc.robot.commands.LockServoRelease;
 import frc.robot.commands.ShootHighGoal;
-import frc.robot.commands.ShootLowGoal;
-import frc.robot.commands.UnlockServoRelease;
-import frc.robot.commands.autocommands.DoShootLowDrive;
-import frc.robot.commands.autocommands.DoShootHighDrive;
 import frc.robot.commands.autocommands.ShootHighDrive;
-import frc.robot.commands.autocommands.ShootLowDrive;
 import frc.robot.commands.climbsequence3.InitializeClimbSequence;
 import frc.robot.commands.climbsequence3.MainClimbSequence;
-import frc.robot.commands.climbsequence.VelocityHomeRearArm;
-import frc.robot.commands.climbsequence2.FrontClimberHoldPercentage;
-import frc.robot.commands.climbsequence2.RearClimberHoldPercentage;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -54,40 +41,31 @@ public class Robot extends TimedRobot {
 
   public static EasyPov feederPov = new EasyPov(new int[] { 1, 0, 0, 0, -1, 0, 0, 0 }, 0);
 
-  // public static SpinShooterFromSmartdashboard spinShooterFromSmartdashboard = new SpinShooterFromSmartdashboard();
-
-  public static UnlockServoRelease unlockServoRelease = new UnlockServoRelease();
-  public static LockServoRelease lockServoRelease = new LockServoRelease();
-
-  public static ClimberControl manualClimberControl = new ClimberControl();
+  // public static ClimberControl manualClimberControl = new ClimberControl();
   // public static AutoLockClimber autoLockClimber = new AutoLockClimber();
   public static InitializeClimbSequence initializeClimbSequence = new InitializeClimbSequence();
   public static MainClimbSequence mainClimbSequence = new MainClimbSequence();
 
-  public static VelocityHomeRearArm velocityHomeClimbArms = new VelocityHomeRearArm();
   public static AutoLockClimberVelocity autoLockClimberVelocity = new AutoLockClimberVelocity();
   
   public static ShootHighGoal shootHighGoal = new ShootHighGoal();
-  public static ShootLowGoal shootLowGoal = new ShootLowGoal();
 
   // Auto Commands
-  public static DoShootLowDrive doShootLowDrive = new DoShootLowDrive();
-  public static DoShootHighDrive doShootHighDrive = new DoShootHighDrive();
-
-  public static ShootLowDrive shootLowDrive = new ShootLowDrive();
   public static ShootHighDrive shootHighDrive = new ShootHighDrive();
 
-  // public static DutyCycleEncoder testEncoder = new DutyCycleEncoder(8);
-  public static RearClimberHoldPercentage rchp = new RearClimberHoldPercentage(0.5, 0.05, -0.0, new ArrayList<CommandBase>());
-  public static FrontClimberHoldPercentage fchp = new FrontClimberHoldPercentage(0.5, 0.05, -0.0, new ArrayList<CommandBase>());
+  public double driveSpeedMultiplier = 0.7;
+  public double turnSpeedMultiplier = 0.7;
 
   @Override
   public void robotInit() {
-    SmartDashboard.putData(doShootLowDrive);
-    SmartDashboard.putData(doShootHighDrive);
+    // SmartDashboard.putData(autoLockClimberVelocity); // The robot can go participate in a water game.
+    SmartDashboard.putData(initializeClimbSequence);
+    SmartDashboard.putData(mainClimbSequence);
+    
+    SmartDashboard.putData(shootHighGoal);
 
-    // SmartDashboard.putData(rchp);
-    // SmartDashboard.putData(fchp);
+    // SmartDashboard.putData(manualClimberControl);
+    // SmartDashboard.putData(velocityHomeClimbArms);
   }
 
   @Override
@@ -95,13 +73,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    SmartDashboard.delete("DoShootHighDrive");
-    SmartDashboard.delete("DoShootLowDrive");
-    if (doShootLowDrive.isScheduled()) {
-      shootLowDrive.schedule();
-    } else if (doShootHighDrive.isScheduled()) {
-      shootHighDrive.schedule();
-    }
+    shootHighDrive.schedule();
   }
 
   @Override
@@ -111,39 +83,38 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // SmartDashboard.putData(autoLockClimberVelocity);
-    SmartDashboard.putData(initializeClimbSequence);
-    SmartDashboard.putData(mainClimbSequence);
-    
-    SmartDashboard.putData(shootLowGoal);
-    SmartDashboard.putData(shootHighGoal);
-
-    SmartDashboard.putData(manualClimberControl);
-    SmartDashboard.putData(velocityHomeClimbArms);
+    driveSpeedMultiplier = 0.7;
+    turnSpeedMultiplier = 0.7;
   }
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Front percentage", climber.getFrontPercentage());
-    SmartDashboard.putNumber("Front value", climber.getArmEncoder());
+    // SmartDashboard.putNumber("Front percentage", climber.getFrontPercentage());
+    // SmartDashboard.putNumber("Rear percentage", climber.getRearPercentage());
+    // SmartDashboard.putNumber("Front value", climber.getArmEncoder());
+
+    if (initializeClimbSequence.isScheduled()) {
+      driveSpeedMultiplier = 0.4;
+      turnSpeedMultiplier = 0.5;
+    }
 
     drivetrain.arcadeDriveTurnRollover(
         IOTools.axisDeadzoneRemap(
-            joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Y_AXIS) * 0.7
+            joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Y_AXIS) * driveSpeedMultiplier
           , 0.0
           , 1.0
           , 0.1
           , 1.0
         )
           , IOTools.axisDeadzoneRemap(
-            joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Z_AXIS) * 0.7
+            joy_1.getRawAxis(frc.robot.constants.controllermap.axis.Drivetrain.Z_AXIS) * turnSpeedMultiplier
           , 0.0
           , 1.0
           , 0.1
           , 1.0
         )
       , 0
-      );
+    );
 
     // System.out.println("Front velocity: " + climber.getFrontVelocity());
 

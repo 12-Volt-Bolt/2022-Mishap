@@ -6,15 +6,15 @@ public class IOTools {
     if (value < deadzone) {
       return 0;
     }
-    maxIn -= minIn;
-    value -= minIn;
+    maxIn -= minIn + deadzone;
+    value -= minIn + deadzone;
     double percentage = value / maxIn;
     return percentage * maxOut;
   }
 
-  public static double axisDeadzoneRemap(double value, double minIn, double maxIn, double deadzone, double maxOut) {
+  public static double axisDeadzoneRemap(double value, double center, double maxIn, double deadzone, double maxOut) {
     double absoluteValue = Math.abs(value);
-    double output = deadzoneRemap(absoluteValue, minIn, maxIn, deadzone, maxOut);
+    double output = deadzoneRemap(absoluteValue, center, maxIn, deadzone, maxOut);
     return Math.copySign(output, value);
   }
 }

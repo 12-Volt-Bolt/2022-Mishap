@@ -12,10 +12,9 @@ import frc.robot.tools.Timer;
 public class AutoLockClimberVelocity extends CommandBase {
 
   private boolean startLock = false;
-  private boolean aleadyLocked = false;
-  private Timer endTimer = new Timer(1000);
+  private Timer endTimer = new Timer(3000);
 
-  private LockServoRelease lockServoRelease = new LockServoRelease();
+  // private UnlockServoRelease unlockServoRelease = new UnlockServoRelease();
   private VelocityHomeRearArm velocityHomeRearArm = new VelocityHomeRearArm();
 
   /** Creates a new AutoLockClimberVelocity. */
@@ -26,36 +25,36 @@ public class AutoLockClimberVelocity extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // unlockServoRelease.schedule();
+    Robot.climber.setServo(0.1);
     velocityHomeRearArm.schedule();
     startLock = false;
-    aleadyLocked = Robot.climber.getRearStop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (startLock == true) {
+      Robot.climber.setServo(Robot.climber.releaseServo.get() + 0.05);
+    }
     if (velocityHomeRearArm.isScheduled() == false && startLock == false) {
       startLock = true;
-      if (aleadyLocked == false) {
-        endTimer.reset();
-        lockServoRelease.schedule();
-      }
+      endTimer.reset();
     }
     
-    if (startLock == true) {
-    }
     Robot.climber.setClimberPowers(0, -0.1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Robot.climber.disableServo();
     Robot.climber.setClimberPowers(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return startLock == true && lockServoRelease.isScheduled() == false && endTimer.isFinished();
+    return startLock == true && endTimer.isFinished();
   }
 }

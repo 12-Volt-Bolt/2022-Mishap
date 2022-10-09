@@ -28,7 +28,7 @@ public class ReleaseRear extends CommandBase {
   public void execute() {
     Robot.climber.setClimberPowers(0, -0.1);
     if (releaseTimer.isFinished()) {
-      Robot.unlockServoRelease.schedule();
+      // Robot.unlockServoRelease.schedule();
     }
   }
 
